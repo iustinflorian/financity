@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "accounts")
@@ -25,6 +27,12 @@ public class Account {
 
     @Column(nullable = false)
     private BigDecimal balance;
+
+    @OneToMany(mappedBy = "fromAccount")
+    private List<Transaction> outgoingTransactions = new ArrayList<>();
+
+    @OneToMany(mappedBy = "toAccount")
+    private List<Transaction> incomingTransactions = new ArrayList<>();
 
     @Version
     /*
