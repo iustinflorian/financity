@@ -1,10 +1,11 @@
-package com.gifprojects.financity.tests;
+package com.gifprojects.financity.basic;
 
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.User;
 import com.gifprojects.financity.repository.AccountRepository;
 import com.gifprojects.financity.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import java.math.BigDecimal;
 
 @SpringBootTest
+@Transactional
 public class ConcurrencyTest {
 
     @Autowired

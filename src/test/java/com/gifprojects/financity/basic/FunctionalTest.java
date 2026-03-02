@@ -1,4 +1,4 @@
-package com.gifprojects.financity.tests;
+package com.gifprojects.financity.basic;
 
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.User;
