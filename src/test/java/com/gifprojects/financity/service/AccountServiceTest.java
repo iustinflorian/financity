@@ -1,21 +1,18 @@
-package com.gifprojects.financity.servicetest;
+package com.gifprojects.financity.service;
 
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.User;
 import com.gifprojects.financity.repository.AccountRepository;
 import com.gifprojects.financity.repository.TransactionRepository;
 import com.gifprojects.financity.repository.UserRepository;
-import com.gifprojects.financity.service.AccountService;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.util.concurrent.CountDownLatch;
 
 @SpringBootTest
 public class AccountServiceTest {
