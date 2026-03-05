@@ -19,11 +19,11 @@ public class Transaction {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "from_account_id", nullable = false)
+    @JoinColumn(name = "from_account_id", nullable = true)
     private Account fromAccount;
 
     @ManyToOne
-    @JoinColumn(name = "to_account_id", nullable = false)
+    @JoinColumn(name = "to_account_id", nullable = true)
     private Account toAccount;
 
     @Column(nullable = false)

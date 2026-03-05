@@ -7,6 +7,7 @@ import com.gifprojects.financity.repository.TransactionRepository;
 import com.gifprojects.financity.repository.UserRepository;
 import com.gifprojects.financity.service.AccountService;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.concurrent.CountDownLatch;
 
 @SpringBootTest
-@Transactional
 public class AccountServiceTest {
 
     @Autowired
@@ -30,6 +31,41 @@ public class AccountServiceTest {
 
     @Autowired
     private TransactionRepository transactionRepository;
+
+    @Test
+    public void testConcurrentWithdrawals() throws InterruptedException {
+        User owner = User.builder().username("test").email("test@gmail.com").password("1234").build();
+        userRepository.save(owner);
+        Account acc = Account.builder().owner(owner).iban("1234").balance(new BigDecimal("0.00")).build();
+        accountRepository.save(acc);
+        String testIban = acc.getIban();
+
+        accountService.deposit(testIban, new BigDecimal("1000.00"));
+
+        int numberOfThreads = 10;
+        Thread[] threads = new Thread[numberOfThreads];
+
+        for (int i  = 0; i < numberOfThreads; i++){
+            int index = i + 1;
+            threads[i] = new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    try{
+                        accountService.withdraw(testIban, new BigDecimal("100.00"));
+                        System.out.println("Execution thread " + index + " successfully completed the task!");
+                    } catch (Exception e){
+                        System.err.println("Execution thread " + index + " failed: " + e.getMessage());
+                    }
+                }
+            });
+            threads[i].start();
+        }
+
+        for (Thread t : threads) {
+            t.join();
+        }
+        System.out.println("Sold final: " + accountRepository.findByIban(testIban).get().getBalance());
+    }
 
     @Test
     public void transferMoneyTest(){
@@ -81,4 +117,10 @@ public class AccountServiceTest {
         Assertions.assertEquals(1, source.getOutgoingTransactions().size());
     }
 
+    @AfterEach
+    void delete(){
+        transactionRepository.deleteAll();
+        accountRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 }
