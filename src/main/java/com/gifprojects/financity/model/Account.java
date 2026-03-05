@@ -22,6 +22,10 @@ public class Account {
     @JoinColumn(name = "user_id", nullable = false)
     private User owner; // name should be 'owner' as in User.java
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "account_type", nullable = false)
+    private AccountType accountType = AccountType.CURRENT;
+
     @Column(unique = true, nullable = false)
     private String iban;
 

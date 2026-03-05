@@ -84,19 +84,27 @@ public class AccountService {
 
         Account fromAcc = accountRepository.findByIban(fromIban)
                 .orElseThrow(() -> new RuntimeException("Account not found!"));
-        Account toAcc = accountRepository.findByIban(toIban)
-                .orElseThrow(() -> new RuntimeException("Account not found!"));
+
         if(fromAcc.getBalance().compareTo(amount) < 0){
             throw new RuntimeException("Insufficient funds!");
         }
 
+        Account toAcc = accountRepository.findByIban(toIban)
+                .orElseThrow(() -> new RuntimeException("Account not found!"));
+
+        if(fromAcc.equals(toAcc)){
+            throw new RuntimeException("Cannot transfer money to the same account!");
+        }
+
         fromAcc.setBalance(fromAcc.getBalance().subtract(amount));
         toAcc.setBalance(toAcc.getBalance().add(amount));
+
         Transaction tx = Transaction.builder()
                 .fromAccount(fromAcc)
                 .toAccount(toAcc)
                 .amount(amount)
                 .build();
+
         transactionRepository.save(tx);
         //eliminated .save() as Hibernate (Dirty Checking activated by @Transactional)
         // already updates to fromAcc and toAcc.
