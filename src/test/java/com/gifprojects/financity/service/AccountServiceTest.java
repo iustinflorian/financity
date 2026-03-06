@@ -1,5 +1,6 @@
 package com.gifprojects.financity.service;
 
+import com.gifprojects.financity.datamap.acc.AccountTransferDTO;
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.User;
 import com.gifprojects.financity.repository.AccountRepository;
@@ -37,7 +38,7 @@ public class AccountServiceTest {
         accountRepository.save(acc);
         String testIban = acc.getIban();
 
-        accountService.deposit(testIban, new BigDecimal("1000.00"));
+        accountService.deposit(acc.getId(), new BigDecimal("1000.00"));
 
         int numberOfThreads = 10;
         Thread[] threads = new Thread[numberOfThreads];
@@ -48,7 +49,7 @@ public class AccountServiceTest {
                 @Override
                 public void run() {
                     try{
-                        accountService.withdraw(testIban, new BigDecimal("100.00"));
+                        accountService.withdraw(acc.getId(), new BigDecimal("100.00"));
                         System.out.println("Execution thread " + index + " successfully completed the task!");
                     } catch (Exception e){
                         System.err.println("Execution thread " + index + " failed: " + e.getMessage());
@@ -92,8 +93,9 @@ public class AccountServiceTest {
                 .build());
 
         // 2. when we transfer
-        BigDecimal transferAmount = new BigDecimal("300.00");
-        accountService.transferMoney(acc1.getIban(),acc2.getIban(),transferAmount);
+        BigDecimal amount = new BigDecimal("300.00");
+        AccountTransferDTO request = new AccountTransferDTO(acc2.getIban(), amount);
+        accountService.transferMoney(acc1.getId(), request);
 
         // 3. this should happen
         Assertions.assertEquals(0, new BigDecimal("700.00").compareTo(acc1.getBalance()));
@@ -106,9 +108,9 @@ public class AccountServiceTest {
     @Test
     @Transactional
     void testTransactionHistory() {
-        accountService.transferMoney("RO03", "RO04", new BigDecimal("100"));
+        accountService.transferMoney(1L, new AccountTransferDTO("RO04", new BigDecimal("10")));
 
-        Account source = accountRepository.findByIban("RO03")
+        Account source = accountRepository.findById(1L)
                 .orElseThrow(() -> new RuntimeException("Account not found!"));
 
         Assertions.assertEquals(1, source.getOutgoingTransactions().size());

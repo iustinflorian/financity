@@ -1,14 +1,12 @@
 package com.gifprojects.financity.util;
 
-import com.gifprojects.financity.datamap.AccountResponseDTO;
-import com.gifprojects.financity.datamap.TransactionResponseDTO;
-import com.gifprojects.financity.datamap.UserResponseDTO;
+import com.gifprojects.financity.datamap.acc.AccountResponseDTO;
+import com.gifprojects.financity.datamap.trx.TransactionResponseDTO;
+import com.gifprojects.financity.datamap.user.UserResponseDTO;
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.Transaction;
 import com.gifprojects.financity.model.User;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class Mapper {

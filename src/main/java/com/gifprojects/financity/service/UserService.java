@@ -1,8 +1,8 @@
 package com.gifprojects.financity.service;
 
-import com.gifprojects.financity.datamap.UserCreateRequestDTO;
-import com.gifprojects.financity.datamap.UserResponseDTO;
-import com.gifprojects.financity.datamap.UserUpdateRequestDTO;
+import com.gifprojects.financity.datamap.user.UserCreateRequestDTO;
+import com.gifprojects.financity.datamap.user.UserResponseDTO;
+import com.gifprojects.financity.datamap.user.UserUpdateRequestDTO;
 import com.gifprojects.financity.model.User;
 import com.gifprojects.financity.repository.UserRepository;
 import com.gifprojects.financity.util.Mapper;

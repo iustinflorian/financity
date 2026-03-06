@@ -1,6 +1,6 @@
 package com.gifprojects.financity.service;
 
-import com.gifprojects.financity.datamap.TransactionResponseDTO;
+import com.gifprojects.financity.datamap.trx.TransactionResponseDTO;
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.Transaction;
 import com.gifprojects.financity.repository.AccountRepository;
@@ -19,10 +19,10 @@ public class TransactionService {
     private Mapper mapper;
 
     @Transactional(readOnly = true)
-    public List<TransactionResponseDTO> transactionsByUserIdAndIban(Long id, String iban){
-        Account acc = accountRepository.findByIban(iban)
+    public List<TransactionResponseDTO> transactionsById(Long userId, Long accountId){
+        Account acc = accountRepository.findById(accountId)
                 .orElseThrow(() -> new RuntimeException("No account with this iban."));
-        if (!acc.getOwner().getId().equals(id)) {
+        if (!acc.getOwner().getId().equals(userId)) {
             throw new RuntimeException("Unauthorized access: You do not own this account.");
         }
 

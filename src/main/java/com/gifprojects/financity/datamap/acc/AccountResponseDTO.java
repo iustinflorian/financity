@@ -1,4 +1,4 @@
-package com.gifprojects.financity.datamap;
+package com.gifprojects.financity.datamap.acc;
 
 import lombok.Data;
 

@@ -1,6 +1,5 @@
-package com.gifprojects.financity.datamap;
+package com.gifprojects.financity.datamap.trx;
 
-import com.gifprojects.financity.model.Account;
 import lombok.Data;
 
 import java.math.BigDecimal;

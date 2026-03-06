@@ -1,4 +1,4 @@
-package com.gifprojects.financity.datamap;
+package com.gifprojects.financity.datamap.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

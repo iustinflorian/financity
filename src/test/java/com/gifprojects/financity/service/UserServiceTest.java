@@ -1,8 +1,7 @@
 package com.gifprojects.financity.service;
 
-import com.gifprojects.financity.datamap.UserCreateRequestDTO;
-import com.gifprojects.financity.datamap.UserResponseDTO;
-import com.gifprojects.financity.model.User;
+import com.gifprojects.financity.datamap.user.UserCreateRequestDTO;
+import com.gifprojects.financity.datamap.user.UserResponseDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

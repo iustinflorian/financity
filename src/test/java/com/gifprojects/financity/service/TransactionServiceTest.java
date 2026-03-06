@@ -1,6 +1,6 @@
 package com.gifprojects.financity.service;
 
-import com.gifprojects.financity.datamap.TransactionResponseDTO;
+import com.gifprojects.financity.datamap.trx.TransactionResponseDTO;
 import com.gifprojects.financity.model.Account;
 import com.gifprojects.financity.model.User;
 import com.gifprojects.financity.repository.AccountRepository;
@@ -35,11 +35,11 @@ public class TransactionServiceTest {
         userRepository.save(owner);
         Account acc = Account.builder().owner(owner).iban("1234").balance(new BigDecimal("0.00")).build();
         accountRepository.save(acc);
-        accountService.deposit("1234", new BigDecimal("100.0"));
-        accountService.withdraw("1234", new BigDecimal("50.0")); // newer transaction
+        accountService.deposit(acc.getId(), new BigDecimal("100.0"));
+        accountService.withdraw(acc.getId(), new BigDecimal("50.0")); // newer transaction
 
         //when
-        List<TransactionResponseDTO> history = transactionService.transactionsByUserIdAndIban(owner.getId(),"1234");
+        List<TransactionResponseDTO> history = transactionService.transactionsByUserIdAndIban(owner.getId(),acc.getId());
 
         //this should happen - newest transaction should be first
         Assertions.assertEquals(2, history.size());
