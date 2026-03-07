@@ -8,6 +8,9 @@ import com.gifprojects.financity.model.Transaction;
 import com.gifprojects.financity.model.User;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+
 @Component
 public class Mapper {
 
@@ -19,11 +22,19 @@ public class Mapper {
         return response;
     }
 
-    public UserResponseDTO mapToResponseDTO(User user){
+    public UserResponseDTO mapToResponseDTO(User user) {
+        if (user == null) return null;
         UserResponseDTO response = new UserResponseDTO();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
-        response.setAccounts(user.getAccounts());
+
+        if (user.getAccounts() != null) {
+            response.setAccounts(user.getAccounts().stream()
+                    .map(this::mapToResponseDTO)
+                    .collect(Collectors.toList()));
+        } else {
+            response.setAccounts(Collections.emptyList());
+        }
         return response;
     }
 

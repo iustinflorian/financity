@@ -1,5 +1,6 @@
 package com.gifprojects.financity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,6 +21,7 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY) // lazy loading for performance
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User owner; // name should be 'owner' as in User.java
 
     @Enumerated(EnumType.STRING)

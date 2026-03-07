@@ -1,5 +1,6 @@
 package com.gifprojects.financity.datamap.user;
 
+import com.gifprojects.financity.datamap.acc.AccountResponseDTO;
 import com.gifprojects.financity.model.Account;
 import lombok.Data;
 
@@ -9,5 +10,5 @@ import java.util.List;
 public class UserResponseDTO {
     Long id;
     String username;
-    List<Account> accounts;
+    List<AccountResponseDTO> accounts;
 }

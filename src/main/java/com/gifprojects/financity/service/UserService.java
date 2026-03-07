@@ -28,6 +28,18 @@ public class UserService {
         return mapper.mapToResponseDTO(savedUser);
     }
 
+    public UserResponseDTO login(UserCreateRequestDTO data) {
+        User user = userRepository.findByEmail(data.getEmail());
+        if (user == null) {
+            throw new RuntimeException("Email or password invalid!");
+        }
+
+        if (!data.getPassword().equals(user.getPassword())){
+            throw new RuntimeException("Email or password invalid!");
+        }
+        return mapper.mapToResponseDTO(user);
+    }
+
     public UserResponseDTO getUserById(Long id){
         User savedUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User account not found!"));
@@ -62,5 +74,4 @@ public class UserService {
         }
         userRepository.deleteById(id);
     }
-
 }

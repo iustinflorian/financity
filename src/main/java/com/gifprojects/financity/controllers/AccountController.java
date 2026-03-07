@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/accounts")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class AccountController {
     private final AccountService accountService;
 
@@ -23,6 +25,11 @@ public class AccountController {
     @GetMapping("/{accountId}")
     public AccountResponseDTO getAccount(@PathVariable Long accountId){
         return accountService.getAccountById(accountId);
+    }
+
+    @GetMapping("/{userId}/acc")
+    public List<AccountResponseDTO> getAccountList(@PathVariable Long userId){
+        return accountService.getAccountsByUser(userId);
     }
 
     @PostMapping("/{accountId}/deposit")

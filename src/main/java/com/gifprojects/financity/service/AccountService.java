@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -25,6 +26,7 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
     private final IbanGenerator ibanGenerator;
     private final Mapper mapper;
+    private final UserService userService;
 
     @Transactional
     public AccountResponseDTO createAccount(AccountCreateRequestDTO data){
@@ -45,6 +47,13 @@ public class AccountService {
     public AccountResponseDTO getAccountById(Long id){
         Account savedAccount = accountRepository.getAccountById(id);
         return mapper.mapToResponseDTO(savedAccount);
+    }
+
+    public List<AccountResponseDTO> getAccountsByUser(Long userId) {
+        List<Account> accounts = accountRepository.findByOwnerId(userId);;
+        return accounts.stream()
+                .map(account -> mapper.mapToResponseDTO(account))
+                .toList();
     }
 
     @Transactional
@@ -117,5 +126,4 @@ public class AccountService {
         //eliminated .save() as Hibernate (Dirty Checking activated by @Transactional)
         // already updates to fromAcc and toAcc.
     }
-
 }

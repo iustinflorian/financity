@@ -10,12 +10,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
     public UserResponseDTO createUser(@RequestBody UserCreateRequestDTO data){
         return userService.createUser(data);
+    }
+
+    @PostMapping("/login")
+    public UserResponseDTO login(@RequestBody UserCreateRequestDTO data) {
+        return userService.login(data);
     }
 
     @GetMapping("/{userId}")
