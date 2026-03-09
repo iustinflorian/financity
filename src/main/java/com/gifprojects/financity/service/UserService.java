@@ -49,6 +49,9 @@ public class UserService {
     public UserResponseDTO updateUserById(Long id, UserUpdateRequestDTO data){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User account not found!"));
+        if (!data.getOldPassword().equals(user.getPassword())){
+            throw new RuntimeException("Invalid old password.");
+        }
         if (data.getEmail()!=null && !data.getEmail().equals(user.getEmail())){
             if (userRepository.existsByEmail(data.getEmail())){
                 throw new RuntimeException("Email already in use!");
@@ -61,8 +64,8 @@ public class UserService {
             }
             user.setUsername(data.getUsername());
         }
-        if (data.getPassword()!=null && !data.getPassword().isBlank()){
-            user.setPassword(data.getPassword());
+        if (data.getNewPassword()!=null && !data.getNewPassword().isBlank()){
+            user.setPassword(data.getNewPassword());
         }
         User savedUser = userRepository.save(user);
         return mapper.mapToResponseDTO(savedUser);
