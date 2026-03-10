@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class FeeService_nouse {
+public class unused_FeeService {
     private final List<FeeCalculator> calculators;
 
     public BigDecimal getFee(AccountType type, BigDecimal amount){

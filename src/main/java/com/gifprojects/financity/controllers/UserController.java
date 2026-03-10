@@ -3,6 +3,7 @@ package com.gifprojects.financity.controllers;
 import com.gifprojects.financity.datamap.user.UserCreateRequestDTO;
 import com.gifprojects.financity.datamap.user.UserResponseDTO;
 import com.gifprojects.financity.datamap.user.UserUpdateRequestDTO;
+import com.gifprojects.financity.datamap.user.UserVerifyRequestDTO;
 import com.gifprojects.financity.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,12 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreateRequestDTO data){
         UserResponseDTO response = userService.createUser(data);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyUser(@RequestBody UserVerifyRequestDTO data){
+        userService.verifyUser(data.getEmail(), data.getCode());
+        return new ResponseEntity<>("Account verified successfully!", HttpStatus.OK);
     }
 
     @PostMapping("/login")

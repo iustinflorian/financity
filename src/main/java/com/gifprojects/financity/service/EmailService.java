@@ -16,6 +16,23 @@ public class EmailService {
     private String fromEmail;
 
     @Async
+    public void sendVerificationEmail(String toEmail, String otp) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject("One more step!");
+            message.setText("You are nearly done. Copy this one time password to get access to your account:\n"
+            + otp);
+
+            mailSender.send(message);
+            System.out.println("Verification email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("Failed to send verification email to " + toEmail + ". Error: " + e.getMessage());
+        }
+    }
+
+    @Async
     public void sendWelcomeEmail(String toEmail, String username) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -27,7 +44,7 @@ public class EmailService {
                     "Happy saving,\nThe Financity Team");
 
             mailSender.send(message);
-            System.out.println("Email sent successfully to: " + toEmail);
+            System.out.println("Welcome email sent successfully to: " + toEmail);
         } catch (Exception e) {
             System.err.println("Failed to send welcome email to " + toEmail + ". Error: " + e.getMessage());
         }

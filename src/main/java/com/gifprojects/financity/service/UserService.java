@@ -10,6 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Random;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -25,23 +29,40 @@ public class UserService {
 
         String hashedPassword = passwordEncoder.encode(data.getPassword());
 
+        String otp = String.format("%06d", new Random().nextInt(999999));
+
         User user = User.builder()
+                .codeExpiration(LocalDateTime.now().plusMinutes(15))
+                .verificationCode(otp)
                 .username(data.getUsername())
                 .email(data.getEmail())
                 .password(hashedPassword)
                 .build();
         User savedUser = userRepository.save(user);
 
-        emailService.sendWelcomeEmail(
-                savedUser.getEmail(),
-                savedUser.getUsername()
-        );
+        emailService.sendVerificationEmail(user.getEmail(), otp);
 
         return mapper.mapToResponseDTO(savedUser);
     }
 
+    public void verifyUser(String email, String code){
+        User user = userRepository.findUserByEmail(email);
+        if (user.isEnabled())
+            throw new RuntimeException("Account already verified!");
+        if (user.getCodeExpiration().isBefore(LocalDateTime.now()))
+            throw new RuntimeException("Verification code expired!");
+        if(!user.getVerificationCode().equals(code))
+            throw new RuntimeException("Invalid code!");
+
+        user.setEnabled(true);
+        user.setVerificationCode(null);
+        userRepository.save(user);
+
+        emailService.sendWelcomeEmail(user.getEmail(), user.getUsername());
+    }
+
     public UserResponseDTO login(UserCreateRequestDTO data) {
-        User user = userRepository.findByEmail(data.getEmail());
+        User user = userRepository.findUserByEmail(data.getEmail());
         if (user == null) {
             throw new RuntimeException("Email or password invalid!");
         }
