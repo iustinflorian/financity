@@ -3,6 +3,8 @@ package com.gifprojects.financity.controllers;
 import com.gifprojects.financity.datamap.trx.TransactionResponseDTO;
 import com.gifprojects.financity.service.TransactionService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,10 +16,11 @@ public class TransactionController {
     private TransactionService transactionService;
 
     @GetMapping("/{userId}/{accountId}")
-    public List<TransactionResponseDTO> getTransactions(
+    public ResponseEntity<List<TransactionResponseDTO>> getTransactions(
             @PathVariable Long userId,
             @PathVariable Long accountId){
-        return transactionService.transactionsById(userId, accountId);
+        List<TransactionResponseDTO> response = transactionService.transactionsById(userId, accountId);;
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

@@ -7,6 +7,7 @@ import com.gifprojects.financity.model.User;
 import com.gifprojects.financity.repository.UserRepository;
 import com.gifprojects.financity.util.Mapper;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,15 +15,19 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final Mapper mapper;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public UserResponseDTO createUser(UserCreateRequestDTO data){
         if (userRepository.existsByEmail(data.getEmail())) {
             throw new RuntimeException("Email already in use!");
         }
+
+        String hashedPassword = passwordEncoder.encode(data.getPassword());
+
         User user = User.builder()
                 .username(data.getUsername())
                 .email(data.getEmail())
-                .password(data.getPassword())
+                .password(hashedPassword)
                 .build();
         User savedUser = userRepository.save(user);
         return mapper.mapToResponseDTO(savedUser);
@@ -34,7 +39,7 @@ public class UserService {
             throw new RuntimeException("Email or password invalid!");
         }
 
-        if (!data.getPassword().equals(user.getPassword())){
+        if (data.getPassword()==null || !passwordEncoder.matches(data.getPassword(), user.getPassword())){
             throw new RuntimeException("Email or password invalid!");
         }
         return mapper.mapToResponseDTO(user);
@@ -49,10 +54,12 @@ public class UserService {
     public UserResponseDTO updateUserById(Long id, UserUpdateRequestDTO data){
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User account not found!"));
-        if (!data.getOldPassword().equals(user.getPassword())){
+
+        if (data.getOldPassword()==null || !passwordEncoder.matches(data.getOldPassword(), user.getPassword())){
             throw new RuntimeException("Invalid old password.");
         }
-        if (data.getEmail()!=null && !data.getEmail().equals(user.getEmail())){
+
+        if (data.getEmail()!=null && !data.getEmail().matches(user.getEmail())){
             if (userRepository.existsByEmail(data.getEmail())){
                 throw new RuntimeException("Email already in use!");
             }
@@ -64,8 +71,8 @@ public class UserService {
             }
             user.setUsername(data.getUsername());
         }
-        if (data.getNewPassword()!=null && !data.getNewPassword().isBlank()){
-            user.setPassword(data.getNewPassword());
+        if (!data.getNewPassword().isBlank()){
+            user.setPassword(passwordEncoder.encode(data.getNewPassword()));
         }
         User savedUser = userRepository.save(user);
         return mapper.mapToResponseDTO(savedUser);

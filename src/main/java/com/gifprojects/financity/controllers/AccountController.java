@@ -3,8 +3,12 @@ package com.gifprojects.financity.controllers;
 import com.gifprojects.financity.datamap.acc.AccountCreateRequestDTO;
 import com.gifprojects.financity.datamap.acc.AccountResponseDTO;
 import com.gifprojects.financity.datamap.acc.AccountTransferDTO;
+import com.gifprojects.financity.datamap.user.UserResponseDTO;
 import com.gifprojects.financity.service.AccountService;
 import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,33 +22,39 @@ public class AccountController {
     private final AccountService accountService;
 
     @PostMapping("/createacc")
-    public AccountResponseDTO createAccount(@RequestBody AccountCreateRequestDTO data){
-        return accountService.createAccount(data);
+    public ResponseEntity<AccountResponseDTO> createAccount(@RequestBody AccountCreateRequestDTO data){
+        AccountResponseDTO response = accountService.createAccount(data);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/{accountId}")
-    public AccountResponseDTO getAccount(@PathVariable Long accountId){
-        return accountService.getAccountById(accountId);
+    public ResponseEntity<AccountResponseDTO> getAccount(@PathVariable Long accountId){
+        AccountResponseDTO response = accountService.getAccountById(accountId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @GetMapping("/{userId}/acc")
-    public List<AccountResponseDTO> getAccountList(@PathVariable Long userId){
-        return accountService.getAccountsByUser(userId);
+    public ResponseEntity<List<AccountResponseDTO>> getAccountList(@PathVariable Long userId){
+        List<AccountResponseDTO> response = accountService.getAccountsByUser(userId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/{accountId}/deposit")
-    public void deposit(@PathVariable Long accountId, @RequestBody BigDecimal amount){
+    public ResponseEntity<String> deposit(@PathVariable Long accountId, @NonNull @RequestBody BigDecimal amount){
         accountService.deposit(accountId, amount);
+        return new ResponseEntity<>("Deposit success!", HttpStatus.OK);
     }
 
     @PostMapping("/{accountId}/withdraw")
-    public void withdraw(@PathVariable Long accountId, @RequestBody BigDecimal amount){
+    public ResponseEntity<String> withdraw(@PathVariable Long accountId, @NonNull @RequestBody BigDecimal amount){
         accountService.withdraw(accountId, amount);
+        return new ResponseEntity<>("Withdraw success!", HttpStatus.OK);
     }
 
     @PostMapping("/{accountId}/transfer")
-    public void transfer(@PathVariable Long accountId, @RequestBody AccountTransferDTO data){
+    public ResponseEntity<String> transfer(@PathVariable Long accountId, @NonNull @RequestBody AccountTransferDTO data){
         accountService.transferMoney(accountId, data);
+        return new ResponseEntity<>("Transfer success!", HttpStatus.OK);
     }
 
 }
