@@ -38,9 +38,9 @@ public class EmailService {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setFrom(fromEmail);
             message.setTo(toEmail);
-            message.setSubject("Welcome to Financity! 🚀");
+            message.setSubject("Welcome to FinanCity! 🚀");
             message.setText("Hi " + username + ",\n\n" +
-                    "Your account has been successfully created." +
+                    "Your account has been successfully created. " +
                     "Happy saving,\nThe Financity Team");
 
             mailSender.send(message);

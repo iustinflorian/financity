@@ -19,6 +19,9 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @ManyToOne(fetch = FetchType.LAZY) // lazy loading for performance
     @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
@@ -26,7 +29,10 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "account_type", nullable = false)
-    private AccountType accountType = AccountType.CURRENT;
+    private AccountType accountType;
+
+    @Column(name = "interest_rate")
+    private Double interestRate;
 
     @Column(unique = true, nullable = false)
     private String iban;

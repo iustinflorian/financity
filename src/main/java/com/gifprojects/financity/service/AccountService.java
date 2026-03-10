@@ -26,7 +26,7 @@ public class AccountService {
     private final TransactionRepository transactionRepository;
     private final IbanGenerator ibanGenerator;
     private final Mapper mapper;
-    private final UserService userService;
+    private final InterestRateService interestRateService;
 
     @Transactional
     public AccountResponseDTO createAccount(AccountCreateRequestDTO data){
@@ -34,11 +34,24 @@ public class AccountService {
                 .orElseThrow(() -> new RuntimeException("User account not found!"));
         String newIban = ibanGenerator.generateIban();
 
+        double interestRate;
+        AccountType accountType;
+
+        if (data.isCurrent()){
+            interestRate = 0.0;
+            accountType = AccountType.CURRENT;
+        } else {
+            interestRate = interestRateService.getCurrMarketRate();
+            accountType = AccountType.SAVINGS;
+        }
+
         Account account = Account.builder()
                 .owner(owner)
                 .iban(newIban)
+                .name(data.getAccountName())
                 .balance(new BigDecimal("0.00"))
-                .accountType(AccountType.CURRENT)
+                .accountType(accountType)
+                .interestRate(interestRate)
                 .build();
         Account savedAccount = accountRepository.save(account);
         return mapper.mapToResponseDTO(savedAccount);
