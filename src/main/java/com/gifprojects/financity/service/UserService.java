@@ -16,6 +16,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final Mapper mapper;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final EmailService emailService;
 
     public UserResponseDTO createUser(UserCreateRequestDTO data){
         if (userRepository.existsByEmail(data.getEmail())) {
@@ -30,6 +31,12 @@ public class UserService {
                 .password(hashedPassword)
                 .build();
         User savedUser = userRepository.save(user);
+
+        emailService.sendWelcomeEmail(
+                savedUser.getEmail(),
+                savedUser.getUsername()
+        );
+
         return mapper.mapToResponseDTO(savedUser);
     }
 

@@ -34,10 +34,10 @@ public class Account {
     @Column(nullable = false)
     private BigDecimal balance;
 
-    @OneToMany(mappedBy = "fromAccount")
+    @OneToMany(mappedBy = "fromAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> outgoingTransactions = new ArrayList<>();
 
-    @OneToMany(mappedBy = "toAccount")
+    @OneToMany(mappedBy = "toAccount", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transaction> incomingTransactions = new ArrayList<>();
 
     @Version
