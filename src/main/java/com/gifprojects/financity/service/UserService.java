@@ -1,6 +1,7 @@
 package com.gifprojects.financity.service;
 
 import com.gifprojects.financity.datamap.user.UserCreateRequestDTO;
+import com.gifprojects.financity.datamap.user.UserLoginRequestDTO;
 import com.gifprojects.financity.datamap.user.UserResponseDTO;
 import com.gifprojects.financity.datamap.user.UserUpdateRequestDTO;
 import com.gifprojects.financity.model.User;
@@ -22,7 +23,7 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final EmailService emailService;
 
-    public UserResponseDTO createUser(UserCreateRequestDTO data){
+    public void createUser(UserCreateRequestDTO data){
         if (userRepository.existsByEmail(data.getEmail())) {
             throw new RuntimeException("Email already in use!");
         }
@@ -38,14 +39,12 @@ public class UserService {
                 .email(data.getEmail())
                 .password(hashedPassword)
                 .build();
-        User savedUser = userRepository.save(user);
+        userRepository.save(user);
 
         emailService.sendVerificationEmail(user.getEmail(), otp);
-
-        return mapper.mapToResponseDTO(savedUser);
     }
 
-    public void verifyUser(String email, String code){
+    public UserResponseDTO verifyUser(String email, String code){
         User user = userRepository.findUserByEmail(email);
         if (user.isEnabled())
             throw new RuntimeException("Account already verified!");
@@ -59,12 +58,18 @@ public class UserService {
         userRepository.save(user);
 
         emailService.sendWelcomeEmail(user.getEmail(), user.getUsername());
+
+        return mapper.mapToResponseDTO(user);
     }
 
-    public UserResponseDTO login(UserCreateRequestDTO data) {
+    public UserResponseDTO login(UserLoginRequestDTO data) {
         User user = userRepository.findUserByEmail(data.getEmail());
         if (user == null) {
             throw new RuntimeException("Email or password invalid!");
+        }
+
+        if(!user.isEnabled()){
+            throw new RuntimeException("Account email is not verified!");
         }
 
         if (data.getPassword()==null || !passwordEncoder.matches(data.getPassword(), user.getPassword())){

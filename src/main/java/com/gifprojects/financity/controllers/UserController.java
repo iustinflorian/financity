@@ -1,9 +1,6 @@
 package com.gifprojects.financity.controllers;
 
-import com.gifprojects.financity.datamap.user.UserCreateRequestDTO;
-import com.gifprojects.financity.datamap.user.UserResponseDTO;
-import com.gifprojects.financity.datamap.user.UserUpdateRequestDTO;
-import com.gifprojects.financity.datamap.user.UserVerifyRequestDTO;
+import com.gifprojects.financity.datamap.user.*;
 import com.gifprojects.financity.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,19 +16,19 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserCreateRequestDTO data){
-        UserResponseDTO response = userService.createUser(data);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserCreateRequestDTO data){
+        userService.createUser(data);
+        return new ResponseEntity<>("User created. Waiting for OTP.", HttpStatus.CREATED);
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestBody UserVerifyRequestDTO data){
-        userService.verifyUser(data.getEmail(), data.getCode());
-        return new ResponseEntity<>("Account verified successfully!", HttpStatus.OK);
+    public ResponseEntity<UserResponseDTO> verifyUser(@RequestBody UserVerifyRequestDTO data){
+        UserResponseDTO response = userService.verifyUser(data.getEmail(), data.getCode());
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserCreateRequestDTO data) {
+    public ResponseEntity<UserResponseDTO> login(@Valid @RequestBody UserLoginRequestDTO data) {
         UserResponseDTO response = userService.login(data);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
