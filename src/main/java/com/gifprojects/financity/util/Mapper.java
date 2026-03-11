@@ -19,6 +19,8 @@ public class Mapper {
         response.setId(account.getId());
         response.setIban(account.getIban());
         response.setBalance(account.getBalance());
+        response.setName(account.getName());
+        response.setAccountType(account.getAccountType().toString());
         return response;
     }
 

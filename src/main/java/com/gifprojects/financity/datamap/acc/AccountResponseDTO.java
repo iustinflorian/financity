@@ -7,6 +7,8 @@ import java.math.BigDecimal;
 @Data
 public class AccountResponseDTO {
     Long id;
+    String name;
+    String accountType;
     String iban;
     BigDecimal balance;
 }
