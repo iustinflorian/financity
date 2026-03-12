@@ -39,7 +39,7 @@ public class TransactionServiceTest {
         accountService.withdraw(acc.getId(), new BigDecimal("50.0")); // newer transaction
 
         //when
-        List<TransactionResponseDTO> history = transactionService.transactionsByUserIdAndIban(owner.getId(),acc.getId());
+        List<TransactionResponseDTO> history = transactionService.transactionsById(owner.getId(),acc.getId());
 
         //this should happen - newest transaction should be first
         Assertions.assertEquals(2, history.size());

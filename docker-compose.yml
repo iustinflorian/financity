@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: financity-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: parola123
+      MYSQL_DATABASE: financity
+      MYSQL_USER: financity_user
+      MYSQL_PASSWORD: financity_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - financity-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: financity-backend
+    env_file:
+      - .env
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/financity?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
+      SPRING_DATASOURCE_USERNAME: "root"
+      SPRING_DATASOURCE_PASSWORD: "parola123"
+      SPRING_LIQUIBASE_ENABLED: "true"
+      SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
+      SPRING_MAIL_HOST: "smtp.gmail.com"
+      SPRING_MAIL_PORT: "587"
+      SPRING_MAIL_USERNAME: "${MAIL_USERNAME}"
+      SPRING_MAIL_PASSWORD: "${MAIL_PASSWORD}"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
+      SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
+    ports:
+      - "8080:8080"
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - financity-network
+
+volumes:
+  mysql_data:
+
+networks:
+  financity-network:
+    driver: bridge
