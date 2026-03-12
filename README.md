@@ -29,11 +29,17 @@ Launch the entire stack (backend + database) with a single command:
 docker-compose up --build -d
 ```
 
-The app will be available by accessing http://localhost:8080.
+### **5. Testing REST endpoints can be done using Postman:
+
+- Download 
+
+- Open Postman and click import.
+
+- Select the file.
 
 Database is available at localhost:3307 (internally, the app uses 3306).
 
-### **5. Tech Stack**
+## Tech Stack**
 -Backend: Java 21, Spring Boot 4.x
 
 -Database: MySQL 8.0
