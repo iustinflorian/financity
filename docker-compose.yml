@@ -27,8 +27,8 @@ services:
       - .env
     environment:
       SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/financity?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=false"
-      SPRING_DATASOURCE_USERNAME: "root"
-      SPRING_DATASOURCE_PASSWORD: "parola123"
+      SPRING_DATASOURCE_USERNAME: "${DATASOURCE_USERNAME}"
+      SPRING_DATASOURCE_PASSWORD: "${DATASOURCE_PASSWORD}"
       SPRING_LIQUIBASE_ENABLED: "true"
       SPRING_JPA_HIBERNATE_DDL_AUTO: "validate"
       SPRING_MAIL_HOST: "smtp.gmail.com"
