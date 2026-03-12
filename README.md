@@ -29,9 +29,9 @@ Launch the entire stack (backend + database) with a single command:
 docker-compose up --build -d
 ```
 
-### **5. Testing REST endpoints can be done using Postman:
+### **5. Testing REST endpoints can be done using Postman:**
 
-- Download 
+- Download [Postman Collection](./financity.postman_collection.json)
 
 - Open Postman and click import.
 
@@ -39,7 +39,7 @@ docker-compose up --build -d
 
 Database is available at localhost:3307 (internally, the app uses 3306).
 
-## Tech Stack**
+## **Tech Stack**
 -Backend: Java 21, Spring Boot 4.x
 
 -Database: MySQL 8.0
