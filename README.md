@@ -2,7 +2,7 @@
 
 FinanCity is a robust personal finance management application built with Spring Boot, MySQL, and Liquibase, fully containerized using Docker. It helps users make and track transactions, manage budgets, and visualize their financial health.
 
-This is the backend. For the frontend, please visit [Financity-Web Github Repo](https://github.com/iustinflorian/financity-web).
+This is the backend. For the frontend, please visit [financity-web github repository](https://github.com/iustinflorian/financity-web).
 
 ## How to run ?
 
