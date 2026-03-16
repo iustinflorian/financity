@@ -51,3 +51,6 @@ Database is available at localhost:3307 (internally, the app uses 3306).
 -Containerization: Docker & Docker Compose
 
 -Security: Spring Security
+
+## **License**
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
